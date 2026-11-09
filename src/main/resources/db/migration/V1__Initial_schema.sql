@@ -7,7 +7,7 @@ CREATE TABLE users (
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
-    CONSTRAINT users_username_check CHECK (username ~ '^[a-z0-9]{5,}$')
+    CONSTRAINT users_username_check CHECK (username ~ '^[a-z0-9]{3,25}$')
 );
 
 CREATE TABLE refresh_tokens (

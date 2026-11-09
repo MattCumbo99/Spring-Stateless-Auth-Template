@@ -12,6 +12,10 @@ spring:
     cache-names:
       - users
 
+server:
+  servlet:
+    context-path: /api/v1
+
 logging:
   level:
     root: INFO
