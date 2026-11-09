@@ -10,6 +10,7 @@ import java.util.UUID
 @Entity
 @Table(name = "users")
 class User {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: UUID? = null
 }
