@@ -3,6 +3,7 @@ plugins {
     kotlin("plugin.spring") version "2.3.21"
     id("org.springframework.boot") version "4.1.2"
     id("io.spring.dependency-management") version "1.1.7"
+    id("com.diffplug.spotless") version "8.10.0"
     kotlin("plugin.jpa") version "2.3.21"
 }
 
@@ -13,6 +14,7 @@ description = "Spring Stateless Auth Template"
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
+        vendor.set(JvmVendorSpec.AMAZON)
     }
 }
 
@@ -51,6 +53,20 @@ allOpen {
     annotation("jakarta.persistence.Entity")
     annotation("jakarta.persistence.MappedSuperclass")
     annotation("jakarta.persistence.Embeddable")
+}
+
+spotless {
+    kotlin {
+        target("**/*.kt")
+
+        ktfmt()
+
+        ktlint()
+    }
+    kotlinGradle {
+        target("*.gradle.kts")
+        ktlint()
+    }
 }
 
 tasks.withType<Test> {
