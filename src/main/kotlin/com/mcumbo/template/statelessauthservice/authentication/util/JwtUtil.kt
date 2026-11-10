@@ -1,8 +1,11 @@
 package com.mcumbo.template.statelessauthservice.authentication.util
 
 import com.mcumbo.template.statelessauthservice.users.entity.User
+import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
+import java.security.MessageDigest
 import java.util.Date
+import java.util.HexFormat
 import java.util.UUID
 import javax.crypto.SecretKey
 
@@ -30,5 +33,23 @@ object JwtUtil {
         }
 
         return builder.signWith(key).compact()
+    }
+
+    fun parseClaims(
+        token: String,
+        key: SecretKey,
+    ): Claims =
+        Jwts
+            .parser()
+            .verifyWith(key)
+            .build()
+            .parseSignedClaims(token)
+            .payload
+
+    fun hashToken(token: String): String {
+        val digest = MessageDigest.getInstance("SHA-256")
+        val hashBytes = digest.digest(token.toByteArray())
+
+        return HexFormat.of().formatHex(hashBytes)
     }
 }
