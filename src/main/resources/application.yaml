@@ -16,6 +16,12 @@ server:
   servlet:
     context-path: /api/v1
 
+app:
+  security:
+    jwt:
+      refresh-expiry: 14d
+      session-expiry: 15m
+
 logging:
   level:
     root: INFO

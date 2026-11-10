@@ -24,6 +24,8 @@ class UserService(
         return user.toResponse()
     }
 
+    fun getUserEntityByUsername(username: String): User? = userRepo.findByUsername(username)
+
     fun createUser(registerRequest: CreateUserRequest): UserResponse {
         if (userRepo.existsByUsername(registerRequest.username)) {
             throw UserAlreadyExistsException()
