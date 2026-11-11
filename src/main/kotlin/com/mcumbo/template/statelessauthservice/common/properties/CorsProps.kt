@@ -1,4 +1,4 @@
-package com.mcumbo.template.statelessauthservice.common.props
+package com.mcumbo.template.statelessauthservice.common.properties
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 

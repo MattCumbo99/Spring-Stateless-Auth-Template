@@ -1,6 +1,6 @@
 package com.mcumbo.template.statelessauthservice.common.config
 
-import com.mcumbo.template.statelessauthservice.common.props.CorsProps
+import com.mcumbo.template.statelessauthservice.common.properties.CorsProps
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer

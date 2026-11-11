@@ -18,6 +18,10 @@ server:
 
 app:
   security:
+    cookies:
+      refresh-token-name: refreshToken
+      session-token-name: sessionToken
+      same-site-strategy: Strict
     jwt:
       refresh-expiry: 14d
       session-expiry: 15m

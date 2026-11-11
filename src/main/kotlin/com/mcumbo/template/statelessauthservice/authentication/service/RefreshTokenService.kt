@@ -21,12 +21,13 @@ class RefreshTokenService(
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
+    @Transactional
     fun issueRefreshToken(
         user: User,
         familyId: UUID? = null,
     ): String {
         val refreshToken = jwtService.generateRefreshToken(user)
-        val claims = jwtService.parseRefreshClaims(refreshToken)
+        val claims = jwtService.parseRefreshClaims(refreshToken)!!
 
         val jti = UUID.fromString(claims.id)
         val expiry = claims.expiration.toInstant().atOffset(ZoneOffset.UTC)
@@ -47,12 +48,19 @@ class RefreshTokenService(
     }
 
     @Transactional
-    fun rotateRefreshToken(token: String) {
-        val tokenHash = JwtUtil.hashToken(token)
+    fun rotateAndProtect(refreshJwt: String) {
+        val tokenHash = JwtUtil.hashToken(refreshJwt)
         val refreshToken =
             refreshTokenRepository.findByTokenHash(tokenHash) ?: throw RefreshTokenNotFoundException()
 
         preventReusage(refreshToken)
+
+        refreshToken.status = ROTATED
+    }
+
+    @Transactional
+    fun revokeFamily(familyId: UUID) {
+        refreshTokenRepository.revokeFamily(familyId)
     }
 
     private fun preventReusage(refreshToken: RefreshToken) {

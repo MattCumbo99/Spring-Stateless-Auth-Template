@@ -2,6 +2,7 @@ package com.mcumbo.template.statelessauthservice.authentication.util
 
 import com.mcumbo.template.statelessauthservice.users.entity.User
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import java.security.MessageDigest
 import java.util.Date
@@ -38,13 +39,17 @@ object JwtUtil {
     fun parseClaims(
         token: String,
         key: SecretKey,
-    ): Claims =
-        Jwts
-            .parser()
-            .verifyWith(key)
-            .build()
-            .parseSignedClaims(token)
-            .payload
+    ): Claims? =
+        try {
+            Jwts
+                .parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .payload
+        } catch (_: JwtException) {
+            null
+        }
 
     fun hashToken(token: String): String {
         val digest = MessageDigest.getInstance("SHA-256")

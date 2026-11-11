@@ -1,6 +1,6 @@
 package com.mcumbo.template.statelessauthservice.users.service
 
-import com.mcumbo.template.statelessauthservice.common.props.CacheNames
+import com.mcumbo.template.statelessauthservice.common.properties.CacheNames
 import com.mcumbo.template.statelessauthservice.users.dto.request.CreateUserRequest
 import com.mcumbo.template.statelessauthservice.users.dto.response.UserResponse
 import com.mcumbo.template.statelessauthservice.users.dto.response.toResponse
