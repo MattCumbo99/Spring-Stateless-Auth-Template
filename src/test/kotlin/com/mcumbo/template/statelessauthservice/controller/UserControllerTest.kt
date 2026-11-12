@@ -22,17 +22,18 @@ class UserControllerTest(
         fun `should return 201 created on successful registration`() {
             val request = RegisterUserRequest(username = "test_user", password = "password123")
 
-            val responseBody = httpClient
-                .post()
-                .uri(registerUri)
-                .body(request)
-                .exchange()
-                .expectStatus()
-                .isCreated
-                .expectBody<UserResponse>()
-                .returnResult()
-                .responseBody
-                .shouldNotBeNull()
+            val responseBody =
+                httpClient
+                    .post()
+                    .uri(registerUri)
+                    .body(request)
+                    .exchange()
+                    .expectStatus()
+                    .isCreated
+                    .expectBody<UserResponse>()
+                    .returnResult()
+                    .responseBody
+                    .shouldNotBeNull()
 
             responseBody.username shouldBe "test_user"
         }
@@ -95,16 +96,17 @@ class UserControllerTest(
                 RegisterUserRequest(username = "test_user", password = "password123"),
             )
 
-            val responseBody = httpClient
-                .get()
-                .uri(getUserUri("test_user"))
-                .exchange()
-                .expectStatus()
-                .isOk
-                .expectBody<UserResponse>()
-                .returnResult()
-                .responseBody
-                .shouldNotBeNull()
+            val responseBody =
+                httpClient
+                    .get()
+                    .uri(getUserUri("test_user"))
+                    .exchange()
+                    .expectStatus()
+                    .isOk
+                    .expectBody<UserResponse>()
+                    .returnResult()
+                    .responseBody
+                    .shouldNotBeNull()
 
             responseBody.username shouldBe "test_user"
         }
