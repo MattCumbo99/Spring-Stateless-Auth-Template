@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 
-data class CreateUserRequest(
+data class RegisterUserRequest(
     @field:NotBlank(message = "Username is required.")
     @field:Pattern(
         regexp = "^[a-z0-9]{5,25}$",

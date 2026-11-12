@@ -2,7 +2,7 @@ package com.mcumbo.template.statelessauthservice.users.controller
 
 import com.mcumbo.template.statelessauthservice.common.annotation.AnonymousEndpoint
 import com.mcumbo.template.statelessauthservice.common.annotation.PublicEndpoint
-import com.mcumbo.template.statelessauthservice.users.dto.request.CreateUserRequest
+import com.mcumbo.template.statelessauthservice.users.dto.request.RegisterUserRequest
 import com.mcumbo.template.statelessauthservice.users.dto.response.UserResponse
 import com.mcumbo.template.statelessauthservice.users.service.UserService
 import jakarta.validation.Valid
@@ -30,6 +30,6 @@ class UserController(
     @ResponseStatus(HttpStatus.CREATED)
     @AnonymousEndpoint
     fun registerUser(
-        @Valid @RequestBody registerRequest: CreateUserRequest,
-    ): UserResponse = userService.createUser(registerRequest)
+        @Valid @RequestBody registerRequest: RegisterUserRequest,
+    ): UserResponse = userService.registerUser(registerRequest)
 }

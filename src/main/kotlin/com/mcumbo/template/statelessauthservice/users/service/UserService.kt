@@ -1,7 +1,7 @@
 package com.mcumbo.template.statelessauthservice.users.service
 
 import com.mcumbo.template.statelessauthservice.common.properties.CacheNames
-import com.mcumbo.template.statelessauthservice.users.dto.request.CreateUserRequest
+import com.mcumbo.template.statelessauthservice.users.dto.request.RegisterUserRequest
 import com.mcumbo.template.statelessauthservice.users.dto.response.UserResponse
 import com.mcumbo.template.statelessauthservice.users.dto.response.toResponse
 import com.mcumbo.template.statelessauthservice.users.entity.User
@@ -26,7 +26,7 @@ class UserService(
 
     fun getUserEntityByUsername(username: String): User? = userRepo.findByUsername(username)
 
-    fun createUser(registerRequest: CreateUserRequest): UserResponse {
+    fun registerUser(registerRequest: RegisterUserRequest): UserResponse {
         if (userRepo.existsByUsername(registerRequest.username)) {
             throw UserAlreadyExistsException()
         }

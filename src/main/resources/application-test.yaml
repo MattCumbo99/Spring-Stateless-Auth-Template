@@ -1,0 +1,12 @@
+app:
+  cors:
+    allowed-origin-patterns:
+      - http://localhost.*
+
+  security:
+    jwt:
+      session-secret: bDVaAz7Dnw7+eXhVmHjmkF+4R7Xtmt6VTSj1hnaKqFk=
+      refresh-secret: qM5RM61psXtbNcvtWmLVMhDVUBgzd2OQHmG23UiP7A0=
+
+  scheduling:
+    refresh-token-cleanup-cron: "-"
