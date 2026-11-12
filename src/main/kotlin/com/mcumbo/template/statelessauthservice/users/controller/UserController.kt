@@ -1,7 +1,5 @@
 package com.mcumbo.template.statelessauthservice.users.controller
 
-import com.mcumbo.template.statelessauthservice.common.annotation.AnonymousEndpoint
-import com.mcumbo.template.statelessauthservice.common.annotation.PublicEndpoint
 import com.mcumbo.template.statelessauthservice.users.dto.request.RegisterUserRequest
 import com.mcumbo.template.statelessauthservice.users.dto.response.UserResponse
 import com.mcumbo.template.statelessauthservice.users.service.UserService
@@ -21,14 +19,12 @@ class UserController(
     private val userService: UserService,
 ) {
     @GetMapping("/{username}")
-    @PublicEndpoint
     fun getUserByUsername(
         @PathVariable username: String,
     ): UserResponse = userService.getUserByUsername(username)
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    @AnonymousEndpoint
     fun registerUser(
         @Valid @RequestBody registerRequest: RegisterUserRequest,
     ): UserResponse = userService.registerUser(registerRequest)

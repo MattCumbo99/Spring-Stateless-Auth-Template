@@ -7,8 +7,9 @@ import jakarta.validation.constraints.Size
 data class RegisterUserRequest(
     @field:NotBlank(message = "Username is required.")
     @field:Pattern(
-        regexp = "^[a-z0-9]{5,25}$",
-        message = "Username must contain only letters, numbers, and between 5 and 25 characters.",
+        regexp = "^[a-z0-9_]{3,25}$",
+        message =
+            "Username must contain only letters, numbers, underscores and between 3 and 25 characters.",
     )
     val username: String,
     @field:NotBlank(message = "Password is required.")

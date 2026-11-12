@@ -3,11 +3,13 @@ package com.mcumbo.template.statelessauthservice.common.config
 import com.mcumbo.template.statelessauthservice.authentication.filter.JwtAuthFilter
 import com.mcumbo.template.statelessauthservice.authentication.provider.CustomUserDetailsService
 import com.mcumbo.template.statelessauthservice.common.properties.CorsProps
+import com.mcumbo.template.statelessauthservice.common.properties.EndpointAccessDefinitionProps
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -19,6 +21,7 @@ import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true)
 class SecurityConfig {
     @Bean fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
@@ -52,6 +55,7 @@ class SecurityConfig {
         http: HttpSecurity,
         jwtAuthFilter: JwtAuthFilter,
         authenticationProvider: AuthenticationProvider,
+        endpointAccessDefinitionProps: EndpointAccessDefinitionProps,
         corsProps: CorsProps,
     ): SecurityFilterChain {
         http
@@ -59,6 +63,15 @@ class SecurityConfig {
             .cors { it.configurationSource(corsConfigurationSource(corsProps)) }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { authCfg ->
+                endpointAccessDefinitionProps.anonymousEndpoints.forEach { (method, path) ->
+                    authCfg.requestMatchers(method, path).anonymous()
+                }
+
+                endpointAccessDefinitionProps.publicEndpoints.forEach { (method, path) ->
+                    authCfg.requestMatchers(method, path).permitAll()
+                }
+
+                // Authenticate all other endpoints by default
                 authCfg.anyRequest().authenticated()
             }.authenticationProvider(authenticationProvider)
             .addFilterBefore(

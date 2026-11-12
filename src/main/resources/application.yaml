@@ -25,6 +25,14 @@ app:
     jwt:
       refresh-expiry: 14d
       session-expiry: 15m
+    anonymous-endpoints:
+      - method: POST
+        path: "/auth/login"
+      - method: POST
+        path: "/users/register"
+    public-endpoints:
+      - method: GET
+        path: "/users/{username}"
 
 logging:
   level:
