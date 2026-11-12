@@ -46,6 +46,11 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("org.testcontainers:testcontainers-junit-jupiter")
+    testImplementation("org.testcontainers:testcontainers-postgresql")
+    testImplementation("io.kotest:kotest-assertions-core-jvm:6.1.11")
+    testImplementation("io.kotest:kotest-runner-junit5-jvm:6.1.11")
+    testImplementation("io.mockk:mockk:1.14.11")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
