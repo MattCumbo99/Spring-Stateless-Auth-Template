@@ -71,7 +71,7 @@ class RefreshTokenService(
         if (refreshToken.status == ROTATED) {
             // Attempted to use a rotated token; trigger security incident
             logger.warn(
-                "[SECURITY] Refresh token reuse detected. Revoking family chain. userId={}, familyId={}, reusedJti={}",
+                "Refresh token reuse detected. Revoking family chain. userId={}, familyId={}, reusedJti={}",
                 refreshToken.user.id,
                 refreshToken.familyId,
                 refreshToken.jti,
