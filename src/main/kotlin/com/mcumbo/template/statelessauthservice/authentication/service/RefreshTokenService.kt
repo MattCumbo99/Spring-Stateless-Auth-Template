@@ -11,6 +11,7 @@ import com.mcumbo.template.statelessauthservice.users.entity.User
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.UUID
 
@@ -62,6 +63,9 @@ class RefreshTokenService(
     fun revokeFamily(familyId: UUID) {
         refreshTokenRepository.revokeFamily(familyId)
     }
+
+    @Transactional
+    fun deleteAllExpiredSince(time: OffsetDateTime): Int = refreshTokenRepository.deleteAllExpiredSince(time)
 
     private fun preventReusage(refreshToken: RefreshToken) {
         if (refreshToken.status == ROTATED) {

@@ -17,9 +17,11 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 app:
+  scheduling:
+    # Runs every 5 minutes
+    refresh-token-cleanup-cron: "0 */5 * * * ?"
   security:
     jwt:
-      # Visit https://randomkeygen.com/jwt-secret to generate keys
       refresh-secret: ${JWT_REFRESH_SECRET:WnILLcLSIfd2oSUG+5BpY4Dg5I+IjJpabo9lLkEomU8=}
       session-secret: ${JWT_SESSION_SECRET:FxLmevAd5LzjZUDLpUW6k/ybO68NkizCZ0AR0tPj0Wg=}
 

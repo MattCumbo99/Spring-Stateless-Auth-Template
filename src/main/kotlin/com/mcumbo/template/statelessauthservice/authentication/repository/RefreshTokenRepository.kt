@@ -4,6 +4,7 @@ import com.mcumbo.template.statelessauthservice.authentication.entity.RefreshTok
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
+import java.time.OffsetDateTime
 import java.util.UUID
 
 interface RefreshTokenRepository : JpaRepository<RefreshToken, UUID> {
@@ -18,4 +19,12 @@ interface RefreshTokenRepository : JpaRepository<RefreshToken, UUID> {
         """,
     )
     fun revokeFamily(familyId: UUID)
+
+    @Modifying
+    @Query(
+        """
+            DELETE FROM RefreshToken t WHERE t.expiresAt < :time
+        """,
+    )
+    fun deleteAllExpiredSince(time: OffsetDateTime): Int
 }
