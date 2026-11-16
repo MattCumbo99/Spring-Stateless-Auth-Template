@@ -49,7 +49,7 @@ class RefreshTokenService(
     }
 
     @Transactional
-    fun rotateAndProtect(refreshJwt: String) {
+    fun rotateToken(refreshJwt: String) {
         val tokenHash = JwtUtil.hashToken(refreshJwt)
         val refreshToken =
             refreshTokenRepository.findByTokenHash(tokenHash) ?: throw RefreshTokenNotFoundException()
