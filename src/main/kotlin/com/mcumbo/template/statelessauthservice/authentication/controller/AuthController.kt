@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpHeaders.SET_COOKIE
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -37,8 +38,8 @@ class AuthController(
         val refreshCookie = cookieService.createRefreshCookie(authResult.refreshJwt)
 
         // Attach the authentication cookies to the response
-        response.addHeader("Set-Cookie", sessionCookie.toString())
-        response.addHeader("Set-Cookie", refreshCookie.toString())
+        response.addHeader(SET_COOKIE, sessionCookie.toString())
+        response.addHeader(SET_COOKIE, refreshCookie.toString())
 
         val userData = authResult.userData
 
@@ -64,8 +65,8 @@ class AuthController(
         val sessionCookie = cookieService.createSessionCookie(refreshResult.sessionJwt)
         val refreshCookie = cookieService.createRefreshCookie(refreshResult.refreshJwt)
 
-        response.addHeader("Set-Cookie", sessionCookie.toString())
-        response.addHeader("Set-Cookie", refreshCookie.toString())
+        response.addHeader(SET_COOKIE, sessionCookie.toString())
+        response.addHeader(SET_COOKIE, refreshCookie.toString())
     }
 
     @PostMapping("/logout")

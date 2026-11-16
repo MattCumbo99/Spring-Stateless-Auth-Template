@@ -4,6 +4,7 @@ import com.mcumbo.template.statelessauthservice.authentication.properties.Cookie
 import com.mcumbo.template.statelessauthservice.authentication.properties.JwtProps
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpHeaders.SET_COOKIE
 import org.springframework.http.ResponseCookie
 import org.springframework.stereotype.Service
 
@@ -24,8 +25,8 @@ class CookieService(
 
         val blankRefreshCookie = buildRefreshCookie("").mutate().maxAge(0).build()
 
-        response.addHeader("Set-Cookie", blankSessionCookie.toString())
-        response.addHeader("Set-Cookie", blankRefreshCookie.toString())
+        response.addHeader(SET_COOKIE, blankSessionCookie.toString())
+        response.addHeader(SET_COOKIE, blankRefreshCookie.toString())
     }
 
     private fun buildSessionCookie(sessionToken: String) =

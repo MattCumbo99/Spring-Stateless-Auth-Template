@@ -31,6 +31,8 @@ app:
       - method: POST
         path: "/users/register"
     public-endpoints:
+      - method: POST
+        path: "/auth/logout"
       - method: GET
         path: "/users/{username}"
 

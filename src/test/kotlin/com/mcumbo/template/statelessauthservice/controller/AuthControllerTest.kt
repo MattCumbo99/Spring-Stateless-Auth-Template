@@ -10,12 +10,15 @@ import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.equals.shouldNotBeEqual
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldBeBlank
 import io.kotest.matchers.string.shouldNotBeBlank
 import io.kotest.matchers.string.shouldStartWith
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.springframework.test.web.servlet.client.ExchangeResult
 import org.springframework.test.web.servlet.client.expectBody
+import kotlin.collections.orEmpty
 
 class AuthControllerTest(
     private val userService: UserService,
@@ -180,6 +183,54 @@ class AuthControllerTest(
                     .shouldNotBeNull()
 
             responseBody.username shouldBe testUser.username
+        }
+    }
+
+    @Nested
+    inner class Logout {
+        private val logoutUri = "/auth/logout"
+
+        @Test
+        fun `should send blank auth cookies to clear session`() {
+            val authCookies = authCookiesFor(testUser.username, testUserPassword).toMultiMap()
+
+            httpClient
+                .post()
+                .uri(logoutUri)
+                .cookies { it.addAll(authCookies) }
+                .exchange()
+                .expectStatus()
+                .isNoContent
+                .returnResult()
+                .shouldClearAuth()
+        }
+
+        @Test
+        fun `should clear auth cookies regardless of authentication status`() {
+            httpClient
+                .post()
+                .uri(logoutUri)
+                .exchange()
+                .expectStatus()
+                .isNoContent
+                .returnResult()
+                .shouldClearAuth()
+        }
+
+        private fun ExchangeResult.shouldClearAuth() {
+            val sessionCookies = this.responseCookies[cookieProps.sessionTokenName].orEmpty()
+            sessionCookies shouldHaveSize 1
+
+            val sessionCookie = sessionCookies.first()
+            sessionCookie.maxAge.isZero shouldBe true
+            sessionCookie.value.shouldBeBlank()
+
+            val refreshCookies = this.responseCookies[cookieProps.refreshTokenName].orEmpty()
+            refreshCookies shouldHaveSize 1
+
+            val refreshCookie = refreshCookies.first()
+            refreshCookie.maxAge.isZero shouldBe true
+            refreshCookie.value.shouldBeBlank()
         }
     }
 }
