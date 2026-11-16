@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  flyway:
+    url: ${DB_URL}
+    user: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+app:
+  scheduling:
+    # Runs every 5 minutes
+    refresh-token-cleanup-cron: "0 */5 * * * ?"
+  security:
+    jwt:
+      refresh-secret: ${JWT_REFRESH_SECRET:WnILLcLSIfd2oSUG+5BpY4Dg5I+IjJpabo9lLkEomU8=}
+      session-secret: ${JWT_SESSION_SECRET:FxLmevAd5LzjZUDLpUW6k/ybO68NkizCZ0AR0tPj0Wg=}
+
+logging:
+  level:
+    com.mcumbo.template: DEBUG

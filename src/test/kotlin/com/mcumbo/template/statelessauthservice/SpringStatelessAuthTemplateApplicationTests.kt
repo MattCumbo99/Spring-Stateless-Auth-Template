@@ -1,13 +1,8 @@
 package com.mcumbo.template.statelessauthservice
 
+import com.mcumbo.template.statelessauthservice.base.BaseIntegrationTest
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest
-class SpringStatelessAuthTemplateApplicationTests {
-
-    @Test
-    fun contextLoads() {
-    }
-
+class SpringStatelessAuthTemplateApplicationTests : BaseIntegrationTest() {
+    @Test fun contextLoads() {}
 }
