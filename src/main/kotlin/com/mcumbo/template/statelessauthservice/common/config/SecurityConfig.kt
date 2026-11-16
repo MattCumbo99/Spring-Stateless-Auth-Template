@@ -4,7 +4,6 @@ import com.mcumbo.template.statelessauthservice.authentication.filter.JwtAuthFil
 import com.mcumbo.template.statelessauthservice.authentication.provider.CustomUserDetailsService
 import com.mcumbo.template.statelessauthservice.common.properties.CorsProps
 import com.mcumbo.template.statelessauthservice.common.properties.EndpointAccessDefinitionProps
-import jakarta.servlet.http.HttpServletResponse
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationProvider
@@ -77,11 +76,7 @@ class SecurityConfig {
             .addFilterBefore(
                 jwtAuthFilter,
                 UsernamePasswordAuthenticationFilter::class.java,
-            ).exceptionHandling { exceptionCfg ->
-                exceptionCfg.authenticationEntryPoint { _, response, _ ->
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED)
-                }
-            }
+            )
 
         return http.build()
     }

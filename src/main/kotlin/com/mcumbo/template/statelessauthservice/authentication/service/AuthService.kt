@@ -49,7 +49,7 @@ class AuthService(
         response.addHeader("Set-Cookie", refreshCookie.toString())
 
         // Log this event
-        logger.info("[LOGIN] Account login successful: ${user.username} with IP: ${request.remoteAddr}")
+        logger.info("Account login successful: ${user.username} with IP: ${request.remoteAddr}")
 
         return user.toResponse()
     }

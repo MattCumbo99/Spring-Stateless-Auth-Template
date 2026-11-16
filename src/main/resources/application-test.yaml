@@ -10,3 +10,7 @@ app:
 
   scheduling:
     refresh-token-cleanup-cron: "-"
+
+logging:
+  level:
+    com.mcumbo.template: DEBUG

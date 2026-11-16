@@ -99,5 +99,38 @@ class AuthControllerTest(
                     .isUnauthorized
             }
         }
+
+        @Test
+        fun `should return 403 forbidden when authenticated`() {
+            val authCookies = authCookies(testUser.username, "password123")
+
+            httpClient
+                .post()
+                .uri(loginUri)
+                .body(LoginRequest(testUser.username, "password123"))
+                .cookies {
+                    it.addAll(authCookies)
+                }.exchange()
+                .expectStatus()
+                .isForbidden
+        }
+    }
+
+    @Nested
+    inner class RefreshSession {
+        private val refreshUri = "/auth/refresh"
+
+        @Test
+        fun `should refresh and renew authentication cookies`() {
+            val authCookies = authCookies(testUser.username, "password123")
+
+            httpClient
+                .post()
+                .uri(refreshUri)
+                .cookies { it.addAll(authCookies) }
+                .exchange()
+                .expectStatus()
+                .isOk
+        }
     }
 }

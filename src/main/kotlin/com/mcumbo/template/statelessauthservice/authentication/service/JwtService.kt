@@ -39,7 +39,7 @@ class JwtService(
     fun getRefreshUsername(refreshJwt: String): String? = parseRefreshClaims(refreshJwt)?.get("username", String::class.java)
 
     fun getRefreshFamilyId(refreshJwt: String): UUID? {
-        val claims = parseSessionClaims(refreshJwt) ?: return null
+        val claims = parseRefreshClaims(refreshJwt) ?: return null
         val strFamilyId = claims.get("family_id", String::class.java) ?: return null
 
         return UUID.fromString(strFamilyId)
