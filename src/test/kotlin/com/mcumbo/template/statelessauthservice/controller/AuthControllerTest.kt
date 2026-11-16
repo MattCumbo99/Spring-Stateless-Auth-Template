@@ -7,6 +7,7 @@ import com.mcumbo.template.statelessauthservice.users.dto.request.RegisterUserRe
 import com.mcumbo.template.statelessauthservice.users.dto.response.UserResponse
 import com.mcumbo.template.statelessauthservice.users.service.UserService
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.equals.shouldNotBeEqual
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldNotBeBlank
@@ -22,13 +23,15 @@ class AuthControllerTest(
 ) : BaseIntegrationTest() {
     private lateinit var testUser: UserResponse
 
+    private val testUserPassword = "password123"
+
     @BeforeEach
     fun init() {
         testUser =
             userService.registerUser(
                 RegisterUserRequest(
                     username = "test_user",
-                    password = "password123",
+                    password = testUserPassword,
                 ),
             )
     }
@@ -41,8 +44,8 @@ class AuthControllerTest(
         fun `should return 200 OK with authentication cookies`() {
             val request =
                 LoginRequest(
-                    username = "test_user",
-                    password = "password123",
+                    username = testUser.username,
+                    password = testUserPassword,
                 )
 
             val response =
@@ -80,12 +83,12 @@ class AuthControllerTest(
             val invalidRequests =
                 listOf(
                     LoginRequest(
-                        username = "test_user", // Existing user, incorrect password
+                        username = testUser.username, // Existing user, incorrect password
                         password = "password1234",
                     ),
                     LoginRequest(
                         username = "test_user123", // Non-existing user
-                        password = "password123",
+                        password = testUserPassword,
                     ),
                 )
 
@@ -102,14 +105,14 @@ class AuthControllerTest(
 
         @Test
         fun `should return 403 forbidden when authenticated`() {
-            val authCookies = authCookies(testUser.username, "password123")
+            val authCookies = authCookiesFor(testUser.username, testUserPassword)
 
             httpClient
                 .post()
                 .uri(loginUri)
-                .body(LoginRequest(testUser.username, "password123"))
+                .body(LoginRequest(testUser.username, testUserPassword))
                 .cookies {
-                    it.addAll(authCookies)
+                    it.addAll(authCookies.toMultiMap())
                 }.exchange()
                 .expectStatus()
                 .isForbidden
@@ -122,15 +125,61 @@ class AuthControllerTest(
 
         @Test
         fun `should refresh and renew authentication cookies`() {
-            val authCookies = authCookies(testUser.username, "password123")
+            val authCookies = authCookiesFor(testUser.username, testUserPassword).toMultiMap()
 
-            httpClient
-                .post()
-                .uri(refreshUri)
-                .cookies { it.addAll(authCookies) }
-                .exchange()
-                .expectStatus()
-                .isOk
+            val response =
+                httpClient
+                    .post()
+                    .uri(refreshUri)
+                    .cookies { it.addAll(authCookies) }
+                    .exchange()
+                    .expectStatus()
+                    .isOk
+                    .returnResult()
+
+            val newSessionCookies = response.responseCookies[cookieProps.sessionTokenName].orEmpty()
+            val newRefreshCookies = response.responseCookies[cookieProps.refreshTokenName].orEmpty()
+
+            newSessionCookies shouldHaveSize 1
+            newRefreshCookies shouldHaveSize 1
+
+            // Check session
+            val newSessionJwt = newSessionCookies.first().value.shouldNotBeBlank()!!
+            val oldSessionJwt = authCookies[cookieProps.sessionTokenName]?.first()!!
+            newSessionJwt shouldStartWith "eyJ"
+            newSessionJwt shouldNotBeEqual oldSessionJwt
+
+            // Check refresh
+            val newRefreshJwt = newRefreshCookies.first().value.shouldNotBeBlank()!!
+            val oldRefreshJwt = authCookies[cookieProps.refreshTokenName]?.first()!!
+            newRefreshJwt shouldStartWith "eyJ"
+            newRefreshJwt shouldNotBeEqual oldRefreshJwt
+        }
+    }
+
+    @Nested
+    inner class GetMe {
+        private val myUri = "/auth/me"
+
+        @Test
+        fun `should get current authenticated user information`() {
+            val authCookies = authCookiesFor(testUser.username, testUserPassword).toMultiMap()
+
+            val responseBody =
+                httpClient
+                    .get()
+                    .uri(myUri)
+                    .cookies {
+                        it.addAll(authCookies)
+                    }.exchange()
+                    .expectStatus()
+                    .isOk
+                    .expectBody<UserResponse>()
+                    .returnResult()
+                    .responseBody
+                    .shouldNotBeNull()
+
+            responseBody.username shouldBe testUser.username
         }
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTe
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.context.annotation.Import
+import org.springframework.http.ResponseCookie
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestConstructor
 import org.springframework.test.web.servlet.client.RestTestClient
@@ -38,10 +39,15 @@ abstract class BaseIntegrationTest {
         unmockkAll()
     }
 
-    protected fun authCookies(
+    data class AuthCookies(
+        val sessionCookie: ResponseCookie,
+        val refreshCookie: ResponseCookie,
+    )
+
+    protected fun authCookiesFor(
         username: String,
         password: String,
-    ): MultiValueMap<String, String> {
+    ): AuthCookies {
         val loginRes =
             httpClient
                 .post()
@@ -58,9 +64,13 @@ abstract class BaseIntegrationTest {
             loginRes.responseCookies[cookieProps.refreshTokenName]?.firstOrNull()
                 ?: throw IllegalStateException("Failed to acquire refresh cookie for $username")
 
+        return AuthCookies(sessionCookie, refreshCookie)
+    }
+
+    protected fun AuthCookies.toMultiMap(): MultiValueMap<String, String> {
         val cookieMap = LinkedMultiValueMap<String, String>()
-        cookieMap.add(sessionCookie.name, sessionCookie.value)
-        cookieMap.add(refreshCookie.name, refreshCookie.value)
+        cookieMap.add(this.sessionCookie.name, this.sessionCookie.value)
+        cookieMap.add(this.refreshCookie.name, this.refreshCookie.value)
 
         return cookieMap
     }
