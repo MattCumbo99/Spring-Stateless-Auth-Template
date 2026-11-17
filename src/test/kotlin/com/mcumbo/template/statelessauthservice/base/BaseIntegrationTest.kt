@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Import
 import org.springframework.http.ResponseCookie
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestConstructor
+import org.springframework.test.context.TestPropertySource
 import org.springframework.test.web.servlet.client.RestTestClient
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
@@ -26,6 +27,7 @@ import org.springframework.util.MultiValueMap
 @AutoConfigureMockMvc
 @AutoConfigureRestTestClient
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@TestPropertySource(properties = ["app.rate-limit.enabled=false"])
 abstract class BaseIntegrationTest {
     @Autowired protected lateinit var httpClient: RestTestClient
 

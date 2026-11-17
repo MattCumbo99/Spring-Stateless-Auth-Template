@@ -1,5 +1,7 @@
 package com.mcumbo.template.statelessauthservice.users.controller
 
+import com.mcumbo.template.statelessauthservice.common.annotation.RateLimit
+import com.mcumbo.template.statelessauthservice.common.model.RateLimitPlan
 import com.mcumbo.template.statelessauthservice.users.dto.request.RegisterUserRequest
 import com.mcumbo.template.statelessauthservice.users.dto.response.UserResponse
 import com.mcumbo.template.statelessauthservice.users.service.UserService
@@ -24,6 +26,7 @@ class UserController(
     ): UserResponse = userService.getUserByUsername(username)
 
     @PostMapping("/register")
+    @RateLimit(RateLimitPlan.AUTH_STRICT)
     @ResponseStatus(HttpStatus.CREATED)
     fun registerUser(
         @Valid @RequestBody registerRequest: RegisterUserRequest,

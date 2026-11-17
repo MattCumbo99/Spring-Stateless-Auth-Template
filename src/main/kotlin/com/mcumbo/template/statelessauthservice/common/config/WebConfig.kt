@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class WebConfig(
     private val corsProps: CorsProps,
     private val requestLoggingInterceptor: RequestLoggingInterceptor,
-    private val rateLimitInterceptor: RateLimitInterceptor,
+    private val rateLimitInterceptor: RateLimitInterceptor?,
 ) : WebMvcConfigurer {
     override fun addCorsMappings(registry: CorsRegistry) {
         registry
@@ -25,6 +25,12 @@ class WebConfig(
 
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(requestLoggingInterceptor).addPathPatterns("/**")
-        registry.addInterceptor(rateLimitInterceptor).addPathPatterns("/**")
+
+        if (rateLimitInterceptor != null) {
+            registry
+                .addInterceptor(rateLimitInterceptor)
+                .addPathPatterns("/api/**")
+                .excludePathPatterns("/actuator/**", "/error")
+        }
     }
 }

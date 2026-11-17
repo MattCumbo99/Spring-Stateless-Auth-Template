@@ -4,6 +4,8 @@ import com.mcumbo.template.statelessauthservice.authentication.dto.request.Login
 import com.mcumbo.template.statelessauthservice.authentication.exception.InvalidSessionException
 import com.mcumbo.template.statelessauthservice.authentication.service.AuthService
 import com.mcumbo.template.statelessauthservice.authentication.service.CookieService
+import com.mcumbo.template.statelessauthservice.common.annotation.RateLimit
+import com.mcumbo.template.statelessauthservice.common.model.RateLimitPlan
 import com.mcumbo.template.statelessauthservice.users.dto.response.UserResponse
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -27,6 +29,7 @@ class AuthController(
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     @PostMapping("/login")
+    @RateLimit(RateLimitPlan.AUTH_STRICT)
     fun login(
         @RequestBody @Valid loginRequest: LoginRequest,
         request: HttpServletRequest,

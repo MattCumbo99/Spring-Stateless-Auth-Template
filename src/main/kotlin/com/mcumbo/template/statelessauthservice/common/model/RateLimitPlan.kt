@@ -27,15 +27,15 @@ enum class RateLimitPlan(
 
     /**
      * Base rate limiter plan.
-     * - Capacity: 60
-     * - Refill Tokens: 60
-     * - Refill Duration: 5 minutes
+     * - Capacity: 100
+     * - Refill Tokens: 100
+     * - Refill Duration: 1 minute
      * - Strategy: Greedy
      */
     STANDARD_API(
-        capacity = 60,
-        refillTokens = 60,
-        refillDuration = 5.minutes.toJavaDuration(),
+        capacity = 100,
+        refillTokens = 100,
+        refillDuration = 1.minutes.toJavaDuration(),
         strategy = RateLimitStrategy.GREEDY,
     ),
     ;
