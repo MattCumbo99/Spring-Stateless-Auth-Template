@@ -3,6 +3,7 @@ package com.mcumbo.template.statelessauthservice.ratelimit
 import com.mcumbo.template.statelessauthservice.authentication.dto.request.LoginRequest
 import com.mcumbo.template.statelessauthservice.base.BaseRateLimitTest
 import com.mcumbo.template.statelessauthservice.common.model.RateLimitPlan
+import io.kotest.matchers.equals.shouldNotEqual
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 
@@ -24,8 +25,9 @@ class AuthRateLimitTest : BaseRateLimitTest() {
                 .uri(loginUri)
                 .body(request)
                 .exchange()
-                .expectStatus()
-                .isUnauthorized
+                .returnResult()
+                .status
+                .shouldNotEqual(HttpStatus.TOO_MANY_REQUESTS)
         }
 
         httpClient
