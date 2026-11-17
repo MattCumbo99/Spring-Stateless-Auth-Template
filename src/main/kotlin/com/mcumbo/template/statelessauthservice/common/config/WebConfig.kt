@@ -29,7 +29,7 @@ class WebConfig(
         if (rateLimitInterceptor != null) {
             registry
                 .addInterceptor(rateLimitInterceptor)
-                .addPathPatterns("/api/**")
+                .addPathPatterns("/**")
                 .excludePathPatterns("/actuator/**", "/error")
         }
     }

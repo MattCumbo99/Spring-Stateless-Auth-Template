@@ -70,6 +70,9 @@ class SecurityConfig {
                     authCfg.requestMatchers(method, path).permitAll()
                 }
 
+                authCfg.requestMatchers("/error").permitAll()
+                authCfg.requestMatchers("/actuator/health", "/actuator/info").permitAll()
+
                 // Authenticate all other endpoints by default
                 authCfg.anyRequest().authenticated()
             }.authenticationProvider(authenticationProvider)
