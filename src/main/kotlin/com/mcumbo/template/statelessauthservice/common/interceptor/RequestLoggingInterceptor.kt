@@ -1,5 +1,6 @@
-package com.mcumbo.template.statelessauthservice.common.logging
+package com.mcumbo.template.statelessauthservice.common.interceptor
 
+import com.mcumbo.template.statelessauthservice.common.util.asInfoLog
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
