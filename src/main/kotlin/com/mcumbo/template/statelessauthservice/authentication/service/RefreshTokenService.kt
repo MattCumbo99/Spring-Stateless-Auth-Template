@@ -27,7 +27,8 @@ class RefreshTokenService(
         user: User,
         familyId: UUID? = null,
     ): String {
-        val refreshToken = jwtService.generateRefreshToken(user)
+        val genFamilyId = familyId ?: UUID.randomUUID()
+        val refreshToken = jwtService.generateRefreshToken(user, genFamilyId)
         val claims = jwtService.parseRefreshClaims(refreshToken)!!
 
         val jti = UUID.fromString(claims.id)
@@ -38,7 +39,7 @@ class RefreshTokenService(
             RefreshToken(
                 jti,
                 user,
-                familyId = familyId ?: UUID.randomUUID(),
+                familyId = genFamilyId,
                 tokenHash,
                 expiresAt = expiry,
             )

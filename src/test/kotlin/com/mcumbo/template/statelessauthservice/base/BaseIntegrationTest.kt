@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.cache.CacheManager
 import org.springframework.context.annotation.Import
 import org.springframework.http.ResponseCookie
 import org.springframework.test.context.ActiveProfiles
@@ -35,9 +36,12 @@ abstract class BaseIntegrationTest {
 
     @Autowired private lateinit var cookieProps: CookieProps
 
+    @Autowired private lateinit var cacheManager: CacheManager
+
     @AfterEach
     fun cleanup() {
         userRepository.deleteAllInBatch()
+        cacheManager.resetCaches()
         unmockkAll()
     }
 

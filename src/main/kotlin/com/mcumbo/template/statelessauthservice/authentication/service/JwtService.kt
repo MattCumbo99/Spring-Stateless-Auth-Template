@@ -24,14 +24,13 @@ class JwtService(
 
     fun generateRefreshToken(
         user: User,
-        familyId: UUID? = null,
+        familyId: UUID,
     ): String =
         JwtUtil.generateToken(
             user,
             expirationMillis = jwtProps.refreshExpiry.toMillis(),
             key = refreshKey,
-            additionalClaims =
-                mapOf("family_id" to (familyId?.toString() ?: UUID.randomUUID().toString())),
+            additionalClaims = mapOf("family_id" to familyId.toString()),
         )
 
     fun getSessionUsername(sessionJwt: String): String? = parseSessionClaims(sessionJwt)?.get("username", String::class.java)
