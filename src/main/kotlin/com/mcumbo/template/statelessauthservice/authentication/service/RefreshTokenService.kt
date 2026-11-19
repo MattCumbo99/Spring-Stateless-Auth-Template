@@ -18,6 +18,7 @@ import java.util.UUID
 @Service
 class RefreshTokenService(
     private val refreshTokenRepository: RefreshTokenRepository,
+    private val tokenRevokerService: TokenRevokerService,
     private val jwtService: JwtService,
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -61,11 +62,6 @@ class RefreshTokenService(
     }
 
     @Transactional
-    fun revokeFamily(familyId: UUID) {
-        refreshTokenRepository.revokeFamily(familyId)
-    }
-
-    @Transactional
     fun deleteAllExpiredSince(time: OffsetDateTime): Int = refreshTokenRepository.deleteAllExpiredSince(time)
 
     private fun preventReusage(refreshToken: RefreshToken) {
@@ -78,7 +74,7 @@ class RefreshTokenService(
                 refreshToken.jti,
             )
 
-            refreshTokenRepository.revokeFamily(refreshToken.familyId)
+            tokenRevokerService.revokeFamily(refreshToken.familyId)
 
             throw InvalidSessionException()
         } else if (refreshToken.status == REVOKED) {

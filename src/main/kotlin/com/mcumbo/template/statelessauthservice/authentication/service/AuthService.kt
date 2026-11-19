@@ -18,6 +18,7 @@ class AuthService(
     private val userService: UserService,
     private val jwtService: JwtService,
     private val refreshTokenService: RefreshTokenService,
+    private val tokenRevokerService: TokenRevokerService,
     private val passwordEncoder: PasswordEncoder,
 ) {
     fun loginUser(loginRequest: LoginRequest): AuthResult {
@@ -77,7 +78,7 @@ class AuthService(
         if (refreshJwt != null) {
             // Leniently revoke tokens in the family
             jwtService.getRefreshFamilyId(refreshJwt)?.let { familyId ->
-                refreshTokenService.revokeFamily(familyId)
+                tokenRevokerService.revokeFamily(familyId)
             }
         }
     }
