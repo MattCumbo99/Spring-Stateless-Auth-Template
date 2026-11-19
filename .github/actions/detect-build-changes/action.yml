@@ -1,0 +1,27 @@
+name: detect-build-changes
+description: Checks if the changes made in a pull request require building and testing.
+
+outputs:
+  run_ci:
+    description: "Whether CI should run"
+    value: ${{ steps.detect.outputs.run_ci }}
+
+runs:
+  using: composite
+  steps:
+    - name: Detect relevant changes
+      id: detect
+      shell: bash
+      run: |
+        git fetch origin HEAD --depth=2
+        git fetch origin ${{ github.base_ref }}:${{ github.base_ref }} --depth=1
+        CHANGED=$(git diff --name-only ${{ github.base_ref }}..HEAD)
+
+        echo "Changed files:"
+        echo "$CHANGED"
+
+        if echo "$CHANGED" | grep -E "src/|build.gradle.kts|settings.gradle.kts" > /dev/null; then
+          echo "run_ci=true" >> $GITHUB_OUTPUT
+        else
+          echo "run_ci=false" >> $GITHUB_OUTPUT
+        fi

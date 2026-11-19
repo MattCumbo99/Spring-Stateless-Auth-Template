@@ -1,0 +1,56 @@
+name: PR Checks
+on: pull_request
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Check for relevant changes
+        uses: ./.github/actions/detect-build-changes
+        id: changes
+      - uses: actions/setup-java@v5
+        if: ${{ steps.changes.outputs.run_ci == 'true' }}
+        with:
+          java-version: 21
+          distribution: corretto
+          cache: gradle
+      - name: Build artifact
+        if: ${{ steps.changes.outputs.run_ci == 'true' }}
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assemble --no-daemon
+      - name: Run unit tests
+        if: ${{ steps.changes.outputs.run_ci == 'true' }}
+        run: ./gradlew test --no-daemon
+      - name: Skip build and tests
+        if: ${{ steps.changes.outputs.run_ci == 'false' }}
+        run: echo "Skipping build"
+
+  spotless:
+    name: Spotless
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Check for relevant changes
+        uses: ./.github/actions/detect-build-changes
+        id: changes
+      - uses: actions/setup-java@v5
+        if: ${{ steps.changes.outputs.run_ci == 'true' }}
+        with:
+          java-version: 21
+          distribution: corretto
+          cache: gradle
+      - name: Run spotless check
+        if: ${{ steps.changes.outputs.run_ci == 'true' }}
+        run: |
+          chmod +x ./gradlew
+          ./gradlew spotlessCheck --no-daemon
+      - name: Skip Spotless check
+        if: ${{ steps.changes.outputs.run_ci == 'false' }}
+        run: echo "Skipping Spotless check"
