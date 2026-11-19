@@ -82,6 +82,31 @@ class AuthControllerTest(
         }
 
         @Test
+        fun `should return 400 bad request on any invalid request field`() {
+            val invalidRequests =
+                listOf(
+                    LoginRequest(
+                        username = "", // Blank username
+                        password = testUserPassword,
+                    ),
+                    LoginRequest(
+                        username = testUser.username,
+                        password = "", // Blank password
+                    ),
+                )
+
+            invalidRequests.forEach { request ->
+                httpClient
+                    .post()
+                    .uri(loginUri)
+                    .body(request)
+                    .exchange()
+                    .expectStatus()
+                    .isBadRequest
+            }
+        }
+
+        @Test
         fun `should return 401 unauthorized on any credential mis-match`() {
             val invalidRequests =
                 listOf(
