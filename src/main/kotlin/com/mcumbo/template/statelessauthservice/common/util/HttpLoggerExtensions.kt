@@ -1,4 +1,4 @@
-package com.mcumbo.template.statelessauthservice.common.logging
+package com.mcumbo.template.statelessauthservice.common.util
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

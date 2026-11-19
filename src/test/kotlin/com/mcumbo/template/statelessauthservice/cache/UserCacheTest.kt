@@ -22,7 +22,6 @@ class UserCacheTest(
     @BeforeEach
     fun setUp() {
         cacheManager.getCache(CacheNames.USERS)?.clear()
-        userRepository.deleteAllInBatch()
 
         testUser =
             userService.registerUser(

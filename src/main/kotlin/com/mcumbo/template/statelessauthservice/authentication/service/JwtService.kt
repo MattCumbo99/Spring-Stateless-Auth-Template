@@ -15,23 +15,22 @@ class JwtService(
     private val sessionKey = Keys.hmacShaKeyFor(jwtProps.sessionSecret.toByteArray())
     private val refreshKey = Keys.hmacShaKeyFor(jwtProps.refreshSecret.toByteArray())
 
-    fun generateSessionToken(user: User): String =
+    fun generateSessionJwt(user: User): String =
         JwtUtil.generateToken(
             user,
             expirationMillis = jwtProps.sessionExpiry.toMillis(),
             key = sessionKey,
         )
 
-    fun generateRefreshToken(
+    fun generateRefreshJwt(
         user: User,
-        familyId: UUID? = null,
+        familyId: UUID,
     ): String =
         JwtUtil.generateToken(
             user,
             expirationMillis = jwtProps.refreshExpiry.toMillis(),
             key = refreshKey,
-            additionalClaims =
-                mapOf("family_id" to (familyId?.toString() ?: UUID.randomUUID().toString())),
+            additionalClaims = mapOf("family_id" to familyId.toString()),
         )
 
     fun getSessionUsername(sessionJwt: String): String? = parseSessionClaims(sessionJwt)?.get("username", String::class.java)

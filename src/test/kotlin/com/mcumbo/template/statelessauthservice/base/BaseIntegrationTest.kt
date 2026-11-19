@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.cache.CacheManager
 import org.springframework.context.annotation.Import
 import org.springframework.http.ResponseCookie
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestConstructor
+import org.springframework.test.context.TestPropertySource
 import org.springframework.test.web.servlet.client.RestTestClient
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
@@ -26,6 +28,7 @@ import org.springframework.util.MultiValueMap
 @AutoConfigureMockMvc
 @AutoConfigureRestTestClient
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@TestPropertySource(properties = ["app.rate-limit.enabled=false"])
 abstract class BaseIntegrationTest {
     @Autowired protected lateinit var httpClient: RestTestClient
 
@@ -33,9 +36,12 @@ abstract class BaseIntegrationTest {
 
     @Autowired private lateinit var cookieProps: CookieProps
 
+    @Autowired private lateinit var cacheManager: CacheManager
+
     @AfterEach
     fun cleanup() {
         userRepository.deleteAllInBatch()
+        cacheManager.resetCaches()
         unmockkAll()
     }
 

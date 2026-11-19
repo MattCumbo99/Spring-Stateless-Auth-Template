@@ -18,8 +18,15 @@ class AuthService(
     private val userService: UserService,
     private val jwtService: JwtService,
     private val refreshTokenService: RefreshTokenService,
+    private val tokenRevokerService: TokenRevokerService,
     private val passwordEncoder: PasswordEncoder,
 ) {
+    /**
+     * Attempts to authenticate the [loginRequest] credentials. If the credentials match against an
+     * existing user, a new refresh token is created to track the session.
+     *
+     * @throws InvalidCredentialsException If any part of the [loginRequest] could not be verified.
+     */
     fun loginUser(loginRequest: LoginRequest): AuthResult {
         val user =
             userService.getUserEntityByUsername(loginRequest.username.lowercase())
@@ -31,7 +38,7 @@ class AuthService(
         }
 
         // Begin providing authentication details for the user
-        val sessionJwt = jwtService.generateSessionToken(user)
+        val sessionJwt = jwtService.generateSessionJwt(user)
         val refreshJwt = refreshTokenService.issueRefreshToken(user, familyId = null)
 
         return AuthResult(
@@ -41,7 +48,11 @@ class AuthService(
         )
     }
 
-    fun getCurrentUser(): UserResponse {
+    /**
+     * Retrieves current user data stored in the [SecurityContextHolder], or `null` if the user is not
+     * authenticated.
+     */
+    fun getCurrentUser(): UserResponse? {
         val auth = SecurityContextHolder.getContext().authentication
         val isValidSession = auth != null && auth.isAuthenticated && auth.principal is CustomUserDetails
 
@@ -51,10 +62,15 @@ class AuthService(
 
             userService.getUserByUsername(username)
         } else {
-            throw InvalidSessionException()
+            null
         }
     }
 
+    /**
+     * Rotates the stored refresh token and returns new authentication data.
+     *
+     * @throws InvalidSessionException If details from the [refreshJwt] could not be parsed.
+     */
     fun refreshSession(refreshJwt: String): RefreshResult {
         // Treat grabbing any token data as a malformed session
         val familyId = jwtService.getRefreshFamilyId(refreshJwt) ?: throw InvalidSessionException()
@@ -68,7 +84,7 @@ class AuthService(
         val newRefreshJwt = refreshTokenService.issueRefreshToken(user, familyId)
 
         return RefreshResult(
-            sessionJwt = jwtService.generateSessionToken(user),
+            sessionJwt = jwtService.generateSessionJwt(user),
             refreshJwt = newRefreshJwt,
         )
     }
@@ -77,7 +93,7 @@ class AuthService(
         if (refreshJwt != null) {
             // Leniently revoke tokens in the family
             jwtService.getRefreshFamilyId(refreshJwt)?.let { familyId ->
-                refreshTokenService.revokeFamily(familyId)
+                tokenRevokerService.revokeFamily(familyId)
             }
         }
     }
