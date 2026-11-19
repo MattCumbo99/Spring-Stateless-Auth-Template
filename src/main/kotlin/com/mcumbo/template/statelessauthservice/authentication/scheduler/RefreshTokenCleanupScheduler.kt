@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.time.OffsetDateTime
 
+/** Periodically deletes refresh token entities whose expiration date exceeds the current time. */
 @Component
 class RefreshTokenCleanupScheduler(
     private val refreshTokenService: RefreshTokenService,

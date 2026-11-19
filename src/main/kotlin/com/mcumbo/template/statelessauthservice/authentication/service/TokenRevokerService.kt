@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
+/** A small service used to create a new transaction when revoking refresh tokens. */
 @Service
 class TokenRevokerService(
     private val refreshTokenRepository: RefreshTokenRepository,

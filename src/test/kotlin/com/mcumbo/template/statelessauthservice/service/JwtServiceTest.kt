@@ -32,7 +32,7 @@ class JwtServiceTest(
     @Test
     fun `should generate valid session token`() {
         val testUser = userService.getUserEntityByUsername(testUserData.username).shouldNotBeNull()
-        val genToken = jwtService.generateSessionToken(testUser)
+        val genToken = jwtService.generateSessionJwt(testUser)
 
         val claims = jwtService.parseSessionClaims(genToken).shouldNotBeNull()
         claims.subject shouldBe testUser.id.toString()
@@ -46,7 +46,7 @@ class JwtServiceTest(
         val testUser = userService.getUserEntityByUsername(testUserData.username).shouldNotBeNull()
 
         val familyId = UUID.randomUUID()
-        val genToken = jwtService.generateRefreshToken(testUser, familyId)
+        val genToken = jwtService.generateRefreshJwt(testUser, familyId)
 
         val claims = jwtService.parseRefreshClaims(genToken).shouldNotBeNull()
 

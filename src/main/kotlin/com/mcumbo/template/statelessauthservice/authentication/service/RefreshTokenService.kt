@@ -23,13 +23,20 @@ class RefreshTokenService(
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    @Transactional
+    /**
+     * Creates and saves a new refresh token.
+     *
+     * @param user Owner of the new token.
+     * @param familyId Family ID to pass onto the new refresh token. A `null` value will create a new
+     *   ID.
+     * @return The created refresh token's JWT.
+     */
     fun issueRefreshToken(
         user: User,
         familyId: UUID? = null,
     ): String {
         val genFamilyId = familyId ?: UUID.randomUUID()
-        val refreshToken = jwtService.generateRefreshToken(user, genFamilyId)
+        val refreshToken = jwtService.generateRefreshJwt(user, genFamilyId)
         val claims = jwtService.parseRefreshClaims(refreshToken)!!
 
         val jti = UUID.fromString(claims.id)
@@ -50,6 +57,15 @@ class RefreshTokenService(
         return refreshToken
     }
 
+    /**
+     * Sets the status of the [RefreshToken] owned under [refreshJwt] to [ROTATED].
+     *
+     * If the token status is already [ROTATED], a security incident is logged and all existing
+     * refresh tokens using the same family ID are set to [REVOKED].
+     *
+     * @throws RefreshTokenNotFoundException If no refresh token matches [refreshJwt].
+     * @throws InvalidSessionException If the token status is either [ROTATED] or [REVOKED].
+     */
     @Transactional
     fun rotateToken(refreshJwt: String) {
         val tokenHash = JwtUtil.hashToken(refreshJwt)

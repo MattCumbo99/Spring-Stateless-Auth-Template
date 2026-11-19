@@ -5,6 +5,7 @@ import com.mcumbo.template.statelessauthservice.authentication.exception.Invalid
 import com.mcumbo.template.statelessauthservice.authentication.service.AuthService
 import com.mcumbo.template.statelessauthservice.authentication.service.CookieService
 import com.mcumbo.template.statelessauthservice.common.annotation.RateLimit
+import com.mcumbo.template.statelessauthservice.common.exception.generic.UnauthorizedException
 import com.mcumbo.template.statelessauthservice.common.model.RateLimitPlan
 import com.mcumbo.template.statelessauthservice.users.dto.response.UserResponse
 import jakarta.servlet.http.HttpServletRequest
@@ -53,14 +54,14 @@ class AuthController(
     }
 
     @GetMapping("/me")
-    fun getCurrentUser(): UserResponse = authService.getCurrentUser()
+    fun getCurrentUser(): UserResponse = authService.getCurrentUser() ?: throw UnauthorizedException()
 
     @PostMapping("/refresh")
     fun refreshSession(
         request: HttpServletRequest,
         response: HttpServletResponse,
     ) {
-        val refreshJwt = cookieService.extractRefreshToken(request) ?: throw InvalidSessionException()
+        val refreshJwt = cookieService.extractRefreshJwt(request) ?: throw InvalidSessionException()
 
         val refreshResult = authService.refreshSession(refreshJwt)
 
@@ -78,7 +79,7 @@ class AuthController(
         request: HttpServletRequest,
         response: HttpServletResponse,
     ) {
-        val refreshJwt = cookieService.extractRefreshToken(request)
+        val refreshJwt = cookieService.extractRefreshJwt(request)
 
         authService.logoutUser(refreshJwt)
 

@@ -17,9 +17,13 @@ class CookieService(
 
     fun createRefreshCookie(refreshJwt: String): ResponseCookie = buildRefreshCookie(refreshJwt)
 
-    fun extractRefreshToken(request: HttpServletRequest): String? =
+    fun extractRefreshJwt(request: HttpServletRequest): String? =
         request.cookies?.firstOrNull { it.name == cookieProps.refreshTokenName }?.value
 
+    /**
+     * Attaches max-age zero cookies to the [response] which overrides the session and refresh
+     * cookies.
+     */
     fun clearAuthCookies(response: HttpServletResponse) {
         val blankSessionCookie = buildSessionCookie("").mutate().maxAge(0).build()
 
