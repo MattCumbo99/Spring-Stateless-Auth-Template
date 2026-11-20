@@ -17,6 +17,9 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 app:
+  cors:
+    allowed-origin-patterns:
+      - http://localhost:*
   scheduling:
     # Runs every 5 minutes
     refresh-token-cleanup-cron: "0 */5 * * * ?"

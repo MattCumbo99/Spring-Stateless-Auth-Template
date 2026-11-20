@@ -1,7 +1,6 @@
 package com.mcumbo.template.statelessauthservice.cache
 
 import com.mcumbo.template.statelessauthservice.base.BaseIntegrationTest
-import com.mcumbo.template.statelessauthservice.common.properties.CacheNames
 import com.mcumbo.template.statelessauthservice.users.dto.request.RegisterUserRequest
 import com.mcumbo.template.statelessauthservice.users.dto.response.UserResponse
 import com.mcumbo.template.statelessauthservice.users.repository.UserRepository
@@ -10,19 +9,15 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.cache.CacheManager
 
 class UserCacheTest(
     private val userService: UserService,
     private val userRepository: UserRepository,
-    private val cacheManager: CacheManager,
 ) : BaseIntegrationTest() {
     private lateinit var testUser: UserResponse
 
     @BeforeEach
     fun setUp() {
-        cacheManager.getCache(CacheNames.USERS)?.clear()
-
         testUser =
             userService.registerUser(
                 RegisterUserRequest(

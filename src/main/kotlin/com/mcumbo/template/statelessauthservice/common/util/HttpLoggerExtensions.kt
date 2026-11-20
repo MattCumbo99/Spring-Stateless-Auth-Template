@@ -52,12 +52,6 @@ fun HttpServletResponse.asInfoLog(
     builder.appendSpaced("status=${this.status}")
     builder.appendSpaced("statusName=\"$statusName\"")
 
-    val isHandledError = HttpStatus.valueOf(this.status).is4xxClientError
-    val errorMsg = origin.getAttribute("errorMessage")
-    if (isHandledError && errorMsg != null) {
-        builder.appendSpaced("msg=\"$errorMsg\"")
-    }
-
     // Device and user info
     builder.appendSpaced("ip=${origin.clientIp()}")
     builder.appendSpaced("ua=${origin.userAgent()}")
@@ -89,7 +83,7 @@ fun HttpServletRequest.clientIp(): String {
 }
 
 /** Gets the service being queried. */
-private fun extractServiceName(requestURI: String): String = requestURI.removePrefix("/api/").substringBefore("/")
+private fun extractServiceName(requestURI: String): String = requestURI.removePrefix("/api/v1/").substringBefore("/")
 
 /** Appends a string with a space at the end. */
 private fun StringBuilder.appendSpaced(str: String) = this.append(str).append(' ')

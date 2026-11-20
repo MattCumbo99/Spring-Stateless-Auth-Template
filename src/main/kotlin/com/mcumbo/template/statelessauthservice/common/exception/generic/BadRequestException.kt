@@ -8,10 +8,11 @@ import org.springframework.http.HttpStatus
  */
 open class BadRequestException(
     message: String,
+    errorCode: String = "BAD_REQUEST",
     cause: Throwable? = null,
 ) : AppException(
         message,
         status = HttpStatus.BAD_REQUEST,
-        errorCode = "BAD_REQUEST",
+        errorCode,
         cause,
     )
