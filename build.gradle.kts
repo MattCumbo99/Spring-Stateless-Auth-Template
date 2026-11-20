@@ -1,10 +1,10 @@
 plugins {
-    kotlin("jvm") version "2.3.21"
-    kotlin("plugin.spring") version "2.3.21"
+    kotlin("jvm") version "2.4.21"
+    kotlin("plugin.spring") version "2.4.21"
     id("org.springframework.boot") version "4.1.2"
     id("io.spring.dependency-management") version "1.1.7"
-    id("com.diffplug.spotless") version "8.10.0"
-    kotlin("plugin.jpa") version "2.3.21"
+    id("com.diffplug.spotless") version "8.11.0"
+    kotlin("plugin.jpa") version "2.4.21"
 }
 
 group = "com.mcumbo.template"
@@ -50,9 +50,9 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.testcontainers:testcontainers-junit-jupiter")
     testImplementation("org.testcontainers:testcontainers-postgresql")
-    testImplementation("io.kotest:kotest-assertions-core-jvm:6.1.11")
-    testImplementation("io.kotest:kotest-runner-junit5-jvm:6.1.11")
-    testImplementation("io.mockk:mockk:1.14.11")
+    testImplementation("io.kotest:kotest-assertions-core-jvm:6.2.7")
+    testImplementation("io.kotest:kotest-runner-junit5-jvm:6.2.7")
+    testImplementation("io.mockk:mockk:1.14.12")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
