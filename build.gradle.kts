@@ -52,7 +52,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers-postgresql")
     testImplementation("io.kotest:kotest-assertions-core-jvm:6.1.11")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:6.1.11")
-    testImplementation("io.mockk:mockk:1.14.11")
+    testImplementation("io.mockk:mockk:1.14.12")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
