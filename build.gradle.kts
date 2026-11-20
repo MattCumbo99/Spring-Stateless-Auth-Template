@@ -4,7 +4,7 @@ plugins {
     id("org.springframework.boot") version "4.1.2"
     id("io.spring.dependency-management") version "1.1.7"
     id("com.diffplug.spotless") version "8.10.0"
-    kotlin("plugin.jpa") version "2.3.21"
+    kotlin("plugin.jpa") version "2.4.21"
 }
 
 group = "com.mcumbo.template"
