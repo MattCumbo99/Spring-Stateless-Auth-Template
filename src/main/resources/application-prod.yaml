@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  flyway:
+    url: ${DB_URL}
+    user: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+app:
+  cors:
+    allowed-origin-patterns: ${CORS_ORIGIN_PATTERNS}
+  scheduling:
+    refresh-token-cleanup-cron: ${CRON_REFRESH_TOKEN_CLEANUP:"0 0 3 * * ?"}
+  security:
+    jwt:
+      refresh-secret: ${JWT_REFRESH_SECRET}
+      session-secret: ${JWT_SESSION_SECRET}

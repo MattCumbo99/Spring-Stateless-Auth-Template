@@ -9,14 +9,10 @@ spring:
     user: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-
 app:
+  cors:
+    allowed-origin-patterns:
+      - http://localhost:*
   scheduling:
     # Runs every 5 minutes
     refresh-token-cleanup-cron: "0 */5 * * * ?"

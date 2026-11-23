@@ -6,4 +6,5 @@ class UsernameNotFoundException(
     username: String,
 ) : NotFoundException(
         message = "User '$username' not found.",
+        errorCode = "USER_NOT_FOUND",
     )
