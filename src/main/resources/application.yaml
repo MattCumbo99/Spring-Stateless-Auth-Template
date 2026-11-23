@@ -6,7 +6,12 @@ spring:
     default: dev
 
   jpa:
+    hibernate:
+      ddl-auto: validate
     show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
   cache:
     cache-names:
