@@ -1,9 +1,9 @@
 plugins {
     kotlin("jvm") version "2.4.21"
     kotlin("plugin.spring") version "2.4.21"
-    id("org.springframework.boot") version "4.1.2"
+    id("org.springframework.boot") version "4.2.0"
     id("io.spring.dependency-management") version "1.1.7"
-    id("com.diffplug.spotless") version "8.11.0"
+    id("com.diffplug.spotless") version "8.12.0"
     kotlin("plugin.jpa") version "2.4.21"
 }
 
@@ -34,7 +34,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("io.jsonwebtoken:jjwt-api:0.13.0")
-    implementation("com.bucket4j:bucket4j_jdk17-core:8.22.0")
+    implementation("com.bucket4j:bucket4j_jdk17-core:8.23.0")
 
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.13.0")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.13.0")
